@@ -90,6 +90,20 @@ def define_hazard(file_name, nc1, variable, haz_type, custom_nyears=False):
 
     hazard1.check()  #This needs to come before the plots
 
+    # NEED TO FIX LATER
+    # Cast event name to string if necessary
+    # print('Event ids:')
+    # print(haz.event_id)
+    # print('Event name:')
+    # print(haz.event_name)
+    num_ev = hazard1.event_id.size
+    event_names = hazard1.event_name[:num_ev]
+    if not pd.api.types.is_string_dtype(event_names):
+        warnings.warn("Some event names are not str will be converted to str", UserWarning)
+        event_names = list(map(str, event_names))
+    hazard1.event_name = event_names
+    print(hazard1.event_name)
+
     return hazard1
 
 
@@ -307,7 +321,8 @@ def climada_plots(hazard,impf_set,exp,imp):
     plt.tight_layout()
     plt.savefig(
           OUT_DIR + 'climada_plotting.png', dpi=500)
-    plt.close()#plt.show(block=True)
+    plt.show(block=True)
+    plt.close()
 
 
 def main():
